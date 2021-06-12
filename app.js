@@ -22,7 +22,7 @@ const options = {
 app.get('/', (req, res) => {
     res.send('Hello tout le monde')
 })
-app.post('/upload', (req, res) => {
+app.post('/upload', async (req, res) => {
     if(req.files) {
         file = req.files.file;
         filename = file.name;
@@ -37,12 +37,11 @@ app.post('/upload', (req, res) => {
                         headers: options.headers     
                      }
                 ).then((result) => {
-                    res.send(result);
-                }).catch((err) => {
-                    res.send(err);
-                    console.log(err.response.data.error);
+                     res.send(result);
+                }).catch((errors) => {
+                     res.send(errors);
+                    console.log(errors.response.data.error);
                 });
-                res.send('file upload');
             }
         })
     }
