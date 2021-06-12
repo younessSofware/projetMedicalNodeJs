@@ -45,7 +45,7 @@ app.post('/upload', async (req, res) => {
                         faceId: faceIds.faceId1,
                         personId: faceIds.faceId2,
                       },{headers: options.headers}).then((result) => {
-                          res.send(resuult.data)
+                          res.send(result.data)
                       }).catch((err)=> {
                           console.log(err);
                       });
