@@ -36,6 +36,7 @@ app.post('/upload', (req, res) => {
                 ).then((result) => {
                     res.send(result);
                 }).catch((err) => {
+                    res.send(err);
                     console.log(err.response.data.error);
                 });
                 res.send('file upload');
