@@ -40,7 +40,7 @@ app.post('/upload', async (req, res) => {
             }else{
                 axios.post(options.uri, { url : hostname + '/' + filename},{headers: options.headers}).then((result) => {
                       faceIds.faceId2 = result.data.faceId;
-                      res.send(faceIds.faceId2) 
+                      res.send(result.data.faceId) 
                 });
             }
         })
