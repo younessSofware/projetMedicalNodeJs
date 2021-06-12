@@ -14,6 +14,7 @@ app.use(express.json())
 
 const options = {
     uri: 'https://eastus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&recognitionModel=recognition_04&returnRecognitionModel=false&detectionModel=detection_03&faceIdTimeToLive=86400',
+    verifyUri: 'https://eastus.api.cognitive.microsoft.com/face/v1.0/verify',
     headers : {
         'Content-Type': 'application/json',
         'Ocp-Apim-Subscription-Key': '31024abd20e841c1b747ed349eebf23c'
@@ -40,7 +41,13 @@ app.post('/upload', async (req, res) => {
             }else{
                 axios.post(options.uri, { url : hostname + '/' + filename},{headers: options.headers}).then((result) => {
                       faceIds.faceId2 = result.data[0].faceId;
-                      res.send(faceIds) 
+                      axios.post(options.uri, {
+                        faceId: faceIds.faceId1,
+                        personId: faceIds.faceId2,
+                        largePersonGroupId: "sample_group"
+                      },{headers: options.headers}).then((result) => {
+                          res.send(resuult.data)
+                      });
                 });
             }
         })
