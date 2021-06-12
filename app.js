@@ -27,7 +27,7 @@ const faceIds = {
     faveId2:''
 };
 axios.post(options.uri, { url : 'https://detect-project.herokuapp.com/hliwa/1.jpg'},{headers: options.headers}).then((result) => {
-        faceIds.faceId1 = result.data.faceId;
+        faceIds.faceId1 = result.data[0].faceId;
 });
 app.post('/upload', async (req, res) => {
     if(req.files) {
@@ -39,8 +39,8 @@ app.post('/upload', async (req, res) => {
                 res.send(err);
             }else{
                 axios.post(options.uri, { url : hostname + '/' + filename},{headers: options.headers}).then((result) => {
-                      faceIds.faceId2 = result.data.faceId;
-                      res.send(result.data) 
+                      faceIds.faceId2 = result.data[0].faceId;
+                      res.send(faceIds) 
                 });
             }
         })
