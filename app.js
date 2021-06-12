@@ -47,6 +47,8 @@ app.post('/upload', async (req, res) => {
                         largePersonGroupId: "sample_group"
                       },{headers: options.headers}).then((result) => {
                           res.send(resuult.data)
+                      }).catch((err)=> {
+                          console.log(err);
                       });
                 });
             }
