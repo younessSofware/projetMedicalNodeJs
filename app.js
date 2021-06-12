@@ -47,7 +47,9 @@ app.post('/upload', async (req, res) => {
                       },{headers: options.headers}).then((result) => {
                           res.send(result.data)
                       }).catch((err)=> {
+                          console.log('************************')
                           console.log(err);
+                          console.log('***************************')
                       });
                 });
             }
