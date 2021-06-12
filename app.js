@@ -48,7 +48,7 @@ app.post('/upload', async (req, res) => {
                           res.send(result.data)
                       }).catch((err)=> {
                           console.log('************************')
-                          console.log(err);
+                          res.send(faceIds)
                           console.log('***************************')
                       });
                 });
