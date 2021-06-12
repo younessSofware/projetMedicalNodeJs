@@ -41,10 +41,9 @@ app.post('/upload', async (req, res) => {
             }else{
                 axios.post(options.uri, { url : hostname + '/' + filename},{headers: options.headers}).then((result) => {
                       faceIds.faceId2 = result.data[0].faceId;
-                      axios.post(options.uri, {
+                      axios.post(options.verifyUri, {
                         faceId: faceIds.faceId1,
                         personId: faceIds.faceId2,
-                        largePersonGroupId: "sample_group"
                       },{headers: options.headers}).then((result) => {
                           res.send(resuult.data)
                       }).catch((err)=> {
