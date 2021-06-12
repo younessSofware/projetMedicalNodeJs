@@ -21,7 +21,14 @@ const options = {
 };
 app.get('/', (req, res) => {
     res.send('Hello tout le monde')
-})
+});
+const faceIds = {
+    faceId1:'' ,
+    faveId2:''
+};
+axios.post(options.uri, { url : 'https://detect-project.herokuapp.com/hliwa/1.jpg'},{headers: options.headers}).then((result) => {
+        faceIds.faceId1 = result.data.faceId;
+});
 app.post('/upload', async (req, res) => {
     if(req.files) {
         file = req.files.file;
@@ -31,15 +38,9 @@ app.post('/upload', async (req, res) => {
             if (err) {
                 res.send(err);
             }else{
-                axios.post(options.uri, { url : hostname + "/" + filename}
-                    ,{
-                        headers: options.headers     
-                     }
-                ).then((result) => {
-                     res.send("20");
-                }).catch((errors) => {
-                     res.send(errors);
-                    console.log(errors.response.data.error);
+                axios.post(options.uri, { url : hostname + '/' + filename},{headers: options.headers}).then((result) => {
+                      faceIds.faceId2 = result.data.faceId;
+                      res.send(faceIds) 
                 });
             }
         })
