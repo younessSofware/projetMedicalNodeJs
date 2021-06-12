@@ -31,8 +31,6 @@ app.post('/upload', async (req, res) => {
             if (err) {
                 res.send(err);
             }else{
-                console.log(hostname + "/" + filename);
-                res.send(hostname + "/" + filename)
                 axios.post(options.uri, { url : hostname + "/" + filename}
                     ,{
                         headers: options.headers     
