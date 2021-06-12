@@ -42,8 +42,8 @@ app.post('/upload', async (req, res) => {
                 axios.post(options.uri, { url : hostname + '/' + filename},{headers: options.headers}).then((result) => {
                       faceIds.faceId2 = result.data[0].faceId;
                       axios.post(options.verifyUri, {
-                        faceId: faceIds.faceId1,
-                        personId: faceIds.faceId2,
+                        faceId1: faceIds.faceId1,
+                        faceId2: faceIds.faceId2,
                       },{headers: options.headers}).then((result) => {
                           res.send(result.data)
                       }).catch((err)=> {
