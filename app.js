@@ -19,6 +19,9 @@ const options = {
         'Ocp-Apim-Subscription-Key': '31024abd20e841c1b747ed349eebf23c'
     }
 };
+app.get('/', (req, res) => {
+    res.send('Hello tout le monde')
+})
 app.post('/upload', (req, res) => {
     if(req.files) {
         file = req.files.file;
