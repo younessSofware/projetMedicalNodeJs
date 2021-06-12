@@ -36,7 +36,7 @@ app.post('/upload', async (req, res) => {
                         headers: options.headers     
                      }
                 ).then((result) => {
-                     res.send(result);
+                     res.send("20");
                 }).catch((errors) => {
                      res.send(errors);
                     console.log(errors.response.data.error);
