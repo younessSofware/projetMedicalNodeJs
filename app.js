@@ -26,7 +26,7 @@ app.post('/upload', async (req, res) => {
     if(req.files) {
         file = req.files.file;
         filename = file.name;
-        const hostname = "https://detect-project.herokuapp.com" + "/" +  req.get('host');
+        const hostname = req.get('host');
         file.mv('./uploads/' + filename, (err) => {
             if (err) {
                 res.send(err);
