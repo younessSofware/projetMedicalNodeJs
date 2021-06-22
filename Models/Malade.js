@@ -8,6 +8,10 @@ const maladeSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    medicaments : {
+        type: [String],
+        trim: true
+    },
     nbPatient: {
         type: Number,
         default: 0

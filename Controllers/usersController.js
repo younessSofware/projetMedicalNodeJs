@@ -9,6 +9,13 @@ exports.hello = (req, res) => {
     res.send('hello');
 }
 
+exports.getUser = (req, res) => {
+    const {_id} = req.query;
+    User.findOne({_id: mongoose.Types.ObjectId(_id)}).exec((err, user) => {
+        res.status(200).send(user);
+    });
+}
+
 exports.signup = (req, res) => {
     const user = new User(req.body);
     user.photos.push(req.files.files.data);
@@ -34,9 +41,8 @@ exports.signin = (req, res) => {
         }
         const token = jwt.sign({ _id: user._id}, process.env.JWT_SECRET);
         res.cookie('token', token, {expire: new Date() + 999999});
-        const {_id, nom, prenom, email, role } = user;
         return res.json({
-            token, user: {_id, nom, prenom, email, role }
+            token, user: user
         })
     })
 }
@@ -46,11 +52,25 @@ var listFacesIds = [];
 var faceId;
 exports.signinByCamera = (req, res) => {
     faceId = req.body.faceIds;
-    let query = User.find({}).select('faceIds');
+    let query = User.find({});
     query.exec(function (err, objs) {
         if (err) return next(err);
-        listFacesIds = objs;
-        verifyApi(listFacesIds.pop(), res);
+        objs.map(obj => {
+            let header =  {
+                'Content-Type': 'application/octet-stream',
+                'Ocp-Apim-Subscription-Key': '648fe4cacb4f414c8c1b32ac30244eef'
+            }
+            axios.post(options.uri, obj.photos[0],{
+                headers: header     
+            }).then((resp) => {
+                listFacesIds.push(resp.data[0].faceId);
+                if(listFacesIds.length == objs.length){
+                    verifyApi(obj._id, listFacesIds.pop(), res);
+                }
+            }).catch((err) => {
+                console.log(err)
+            });
+        })
     });
 }
 const options = {
@@ -58,20 +78,21 @@ const options = {
     verifyUri: 'https://eastus.api.cognitive.microsoft.com/face/v1.0/verify',
     headers : {
         'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': '31024abd20e841c1b747ed349eebf23c'
+        'Ocp-Apim-Subscription-Key': '648fe4cacb4f414c8c1b32ac30244eef'
     }
 };
 
 function axiosMethods(faceId1, faceId2){
+    const header = options.headers;
     return axios.post(options.verifyUri, {
         faceId1: faceId1,
         faceId2: faceId2
     },{
-        headers: options.headers     
+        headers: header     
    });
 }
 
-function verifyApi(obj, res){
+function verifyApi(_id, obj, res){
     if(!obj){
         listFacesIds = []
         res.status(401).json({
@@ -79,23 +100,23 @@ function verifyApi(obj, res){
         });
         return;
     }
-    axiosMethods(obj.faceIds, faceId)
+    axiosMethods(obj, faceId)
     .then((response) => {
         if(response.data.isIdentical){
-            User.findById(obj._id).then((user) => {
+            User.findById(_id).then((user) => {
                 const token = jwt.sign({ _id: user._id}, process.env.JWT_SECRET);
                 const {_id, nom, prenom, email, role } = user;
                 res.status(200).json({
-                    token, user: {_id, nom, prenom, email, role }
+                    token, user: user
                 });
                 res.cookie('token', token, {expire: new Date() + 999999});
                 return;
             });
         }else{
-          return verifyApi(listFacesIds.pop(), res);  
+          return verifyApi(_id, listFacesIds.pop(), res);  
         }
-    }, err => {
-        res.status(401);
+    }).catch((err) => {
+        res.status(401).send(JSON.stringify(err));
     })
 }
 
@@ -139,27 +160,25 @@ exports.addMalade = (req, res) => {
 }
 
 exports.getAll = (req, res) => {
-   const _userId = req.query._id;
-   let maladesOfPatient;
-   User.findOne({_id: _userId}).populate('consultaion').populate('patients').populate('malades').exec((err, result) => {
+   const _userId = req.query._id; 
+   User.findOne({_id: _userId}).populate('consultaion').populate('infermeris').populate('patients').populate('malades').exec((err, result) => {
        if(err) res.status(400).send();
        let count = 0;
-
-       // nbPatient
        result.malades.map((malade, index) => {
-        result.consultaion.map((consult) => {
-            if(consult.malade.toString() == malade._id.toString()) count++;
-        });
-        let maladeOrigin = new Malade(malade);
-        maladeOrigin.nbPatient = count;
-        maladeOrigin.save()
-        count = 0
+            result.consultaion.map((consult) => {
+                if(consult.malade.toString() == malade._id.toString()) count++;
+            });
+            let maladeOrigin = new Malade(malade);
+            maladeOrigin.nbPatient = count;
+            maladeOrigin.save()
+            count = 0
        });
        // patient with etat and type of maladie
        res.status(200).json({
         consultations: result.consultaion,
         patients: result.patients,
         malades: result.malades,
+        infermeris: result.infermeris
        });
 
    });

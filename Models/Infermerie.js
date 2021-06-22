@@ -1,8 +1,7 @@
 const Schema  = require('mongoose');
 const mongoose  = require('mongoose');
 
-const Malade = require('./Malade')
-const patientSchema = new mongoose.Schema({
+const infermerieSchema = new mongoose.Schema({
     nom : {
         type: String,
         trim: true
@@ -24,8 +23,6 @@ const patientSchema = new mongoose.Schema({
         type: String,
         default: '0653394653'
     },
-    malades: [{ type: Schema.Types.ObjectId, ref: 'Malade' }],
-    messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }]
 }, {timestamps: true});
 
-module.exports = mongoose.model('Patient', patientSchema);
+module.exports = mongoose.model('Infermerie', infermerieSchema);

@@ -1,6 +1,23 @@
 const Patient = require('../Models/Patient');
 const Malade = require('../Models/Malade');
+const User = require('../Models/User');
 
+const mongoose = require('mongoose');
+exports.addPatientToUser= (req, res) => {
+    const patient = new Patient(req.body);
+    const { user_id } = req.body;
+
+    patient.save((err, result) => {
+        User.findOne({_id: mongoose.Types.ObjectId(user_id)}).exec((err, user) => {
+            user.patients.push(result._id);
+            if(err) res.status(400).json({
+                message: "you have a err"
+            });
+            user.save();
+            res.status(200).send(result);
+        })
+    })
+}
 exports.addPatient= (req, res) => {
     const patient = new Patient(req.body);
     patient.save((err, result) => {
@@ -27,10 +44,20 @@ exports.modifyPatient = (req, res) => {
     });
 };
 exports.deletePatient= (req, res) => {
-    const {_id} = req.body;
-    Patient.findByIdAndDelete(_id).then(() => {
-        res.status(200).json({
-            message: "delete succcufuly"
+    const {_id, user_id} = req.body;
+    Patient.findByIdAndDelete({_id: _id}).then(() => {
+        User.findOne({_id: mongoose.Types.ObjectId(user_id)}).exec((err, user) => {
+            if(err){
+                res.status(400).json({
+                    message: "cannot delete"
+                });
+            }
+            const index = user.patients.findIndex(p_id => p_id == _id);
+            user.patients.splice(index, 1);
+            user.save();
+            res.status(200).json({
+                message: "delete succcufully"
+            });
         });
     }).catch((err) => {
             res.status(400).json({
@@ -40,7 +67,8 @@ exports.deletePatient= (req, res) => {
 };
 
 exports.getPatients = (req, res) => {
-    Patient.find().exec().then((result) => {
+    const {_id} = req.query;
+    Patient.find({ _id: mongoose.Types.ObjectId(_id)}).exec().then((result) => {
         res.status(200).send(result);
     }).catch((err) => {
         console.log(err)

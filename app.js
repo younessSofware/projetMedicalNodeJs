@@ -12,6 +12,8 @@ const userRouter = require('./Routes/users')
 const maladeRouter = require('./Routes/malade');
 const patientRouter = require('./Routes/patient');
 const consultationRouter = require('./Routes/consultations');
+const messageRouter = require('./Routes/message');
+const infermerieRouter = require('./Routes/infermerie');
 app.use( express.static( "uploads" ) );
 app.use(cors());
 app.use(express.json())
@@ -21,6 +23,8 @@ app.use('/api/users', userRouter);
 app.use('/api/malades', maladeRouter);
 app.use('/api/patients', patientRouter);
 app.use('/api/consultations', consultationRouter);
+app.use('/api/messages', messageRouter);
+app.use('/api/infermeris', infermerieRouter);
 
 
 

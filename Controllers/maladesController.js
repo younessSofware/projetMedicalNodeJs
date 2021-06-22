@@ -11,10 +11,11 @@ exports.addMalade = (req, res) => {
     })
 }
 exports.modifyMalade = (req, res) => {
-    const {icon, nom} = req.body
+    const {icon, nom, medicaments} = req.body
     Malade.findById(req.body._id).then(( malade) => {
         if(icon) malade.icon = icon;
         if(nom) malade.nom = nom;
+        if(medicaments) malade.medicaments = medicaments;
         malade.save();
         res.status(200).json({
             message: "successfully modified"

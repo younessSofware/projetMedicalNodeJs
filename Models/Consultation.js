@@ -3,7 +3,7 @@ const Schema  = require('mongoose');
 
 const consultationSchema = new mongoose.Schema({
   rapport:{
-      type: String
+      type: Buffer
   },
   patient:{
       type: Schema.Types.ObjectId, ref: 'Patient' 

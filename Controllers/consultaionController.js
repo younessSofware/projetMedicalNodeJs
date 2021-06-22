@@ -4,6 +4,8 @@ const Consultation = require('../Models/Consultation');
 const mongoose = require('mongoose')
 exports.addConsultation = (req, res) => {
     const consultation = new Consultation(req.body);
+    const {rapport} = req.files;
+    consultation.rapport = rapport.data;
     consultation.save((err, result) => {
         if(err) res.status(400).json({
             message: "you have a err"

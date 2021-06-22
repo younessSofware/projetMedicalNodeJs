@@ -36,10 +36,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    faceIds: {
-        type: String,
-        required: true
-    },
     photos: {
         type: [Buffer],
         required: true
@@ -50,7 +46,9 @@ const userSchema = new mongoose.Schema({
     },
     malades: [{ type: Schema.Types.ObjectId, ref: 'Malade' }],
     patients: [{ type: Schema.Types.ObjectId, ref: 'Patient' }],
-    consultaion: [{ type: Schema.Types.ObjectId, ref: 'Consultation' }]
+    consultaion: [{ type: Schema.Types.ObjectId, ref: 'Consultation' }],
+    messages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
+    infermeris: [{ type: Schema.Types.ObjectId, ref: 'Infermerie' }],
 }, {timestamps: true});
 
 userSchema.virtual('password')
