@@ -45,7 +45,7 @@ exports.modifyPatient = (req, res) => {
 };
 exports.deletePatient= (req, res) => {
     const {_id, user_id} = req.body;
-    Patient.findByIdAndDelete({_id: _id}).then(() => {
+    Patient.findByIdAndDelete({_id: mongoose.Types.ObjectId(_id)}).then(() => {
         User.findOne({_id: mongoose.Types.ObjectId(user_id)}).exec((err, user) => {
             if(err){
                 res.status(400).json({
@@ -78,7 +78,7 @@ exports.getPatients = (req, res) => {
 exports.getPatientsOfMalade = (req, res) => {
     const _id = req.query._id;
     const patients = [];
-    Malade.findOne({_id : _id }).exec().then((result) => {
+    Malade.findOne({_id :  mongoose.Types.ObjectId(_id)}).exec().then((result) => {
         if(!result) res.status(400).send(result);
         Patient.find({malades: { $eq: {_id: result._id} }}).exec().then((patients) => {
             res.status(200).json({

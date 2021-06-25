@@ -18,6 +18,7 @@ exports.getUser = (req, res) => {
 
 exports.signup = (req, res) => {
     const user = new User(req.body);
+    console.log(req.body)
     user.photos.push(req.files.files.data);
     user.save((err, result) => {
         if(err) res.status(400).send(err);
@@ -161,8 +162,13 @@ exports.addMalade = (req, res) => {
 
 exports.getAll = (req, res) => {
    const _userId = req.query._id; 
-   User.findOne({_id: _userId}).populate('consultaion').populate('infermeris').populate('patients').populate('malades').exec((err, result) => {
-       if(err) res.status(400).send();
+   User.findOne({_id:  mongoose.Types.ObjectId(_userId)}).populate('consultaion').populate('infermeris').populate('patients').populate('malades').exec((err, result) => {
+       if(err){
+           console.log('***********************')
+           console.log(err)
+           console.log('*************************')
+           res.status(400).send(JSON.stringify(err));
+       }
        let count = 0;
        result.malades.map((malade, index) => {
             result.consultaion.map((consult) => {

@@ -1,4 +1,18 @@
 const express  = require('express');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const app = express();
 const cors = require('cors');
 const upload = require('express-fileupload');
@@ -29,7 +43,7 @@ app.use('/api/infermeris', infermerieRouter);
 
 
 
-mongoose.connect(process.env.DATABASE)
+mongoose.connect(process.env.ATLAS)
         .then((res) => {
             console.log("connection success");
         })
