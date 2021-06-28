@@ -44,7 +44,9 @@ app.use('/api/messages', messageRouter);
 app.use('/api/infermeris', infermerieRouter);
 
 
-
+console.log('******************')
+console.log(process.env.ATLAS)
+console.log('******************')
 
 mongoose.connect(process.env.ATLAS)
         .then((res) => {
