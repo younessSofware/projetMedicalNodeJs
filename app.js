@@ -33,9 +33,6 @@ app.use(cors());
 app.use(express.json())
 const mongoose = require("mongoose");
 app.use(cookie());
-app.use('/', (req, res) => {
-    res.send('hello');
-})
 app.use('/api/users', userRouter);
 app.use('/api/malades', maladeRouter);
 app.use('/api/patients', patientRouter);
